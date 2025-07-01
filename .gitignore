@@ -13,3 +13,5 @@ __pycache__/
 
 # Config files to ignore
 config/config.yml
+build/
+funding_rate_arbitrage_bot.egg-info/

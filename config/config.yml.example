@@ -1,0 +1,37 @@
+# 欧易(OKX) API 密钥配置
+okx:
+  apiKey: 'YOUR_OKX_API_KEY'
+  secret: 'YOUR_OKX_SECRET_KEY'
+  password: 'YOUR_OKX_API_PASSWORD'
+  sandbox_mode: true # 是否使用模拟盘
+
+# 数据库配置 (PostgreSQL)
+database:
+  type: 'postgresql'
+  host: 'localhost'
+  port: 5432
+  user: 'your_db_user'
+  password: 'your_db_password'
+  dbname: 'okx_arbitrage'
+
+# 策略核心参数
+strategy:
+  min_annualized_return: 0.15      # 开启新仓位的最低净年化收益率阈值
+  capital_per_trade_ratio: 0.1     # 单笔交易动用的资金占总资金的比例
+  max_open_positions: 5            # 允许同时存在的最大仓位数量
+  scan_interval_seconds: 45        # 扫描市场机会的间隔时间
+  enable_negative_rate_strategy: true # 是否开启负费率套利
+  enable_spot_earning: true        # 是否开启现货赚币
+
+# 风险管理核心参数
+risk:
+  leverage: 2.0                    # 杠杆倍数
+  margin_reset_threshold: 0.15     # 触发仓位重置的保证金率阈值
+  profit_close_threshold: -0.0001  # 当资金费率变为负值并低于此阈值时平仓
+  max_allowed_slippage: 0.002      # 允许的最大滑点 (0.2%)
+
+# Telegram 通知配置
+telegram:
+  enabled: true                    # 是否启用Telegram通知
+  bot_token: 'YOUR_TELEGRAM_BOT_TOKEN' # 从 BotFather 获取的机器人Token
+  chat_id: 'YOUR_TELEGRAM_CHAT_ID'     # 您的个人或群组的Chat ID

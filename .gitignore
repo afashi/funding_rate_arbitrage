@@ -1,0 +1,15 @@
+# IDEs and editors
+.idea/
+.vscode/
+
+# Environment
+.env
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Config files to ignore
+config/config.yml

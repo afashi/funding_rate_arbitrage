@@ -1,0 +1,46 @@
+version: '3.9' # 推荐使用最新的稳定版本，以支持新特性
+
+services:
+  app:
+    build:
+      context: . # Dockerfile 所在的上下文目录
+      dockerfile: Dockerfile # Dockerfile 的名称
+    container_name: funding_arbitrage_bot # 容器的名称
+    # ports:
+    #   - "8000:8000" # 如果你的应用有需要外部访问的端口，可以取消注释
+    depends_on:
+      db:
+        condition: service_healthy # 确保数据库服务健康后再启动应用
+    environment:
+      # ⚠️ 重要的环境变量配置
+      # 你的应用应从环境变量中读取数据库连接信息和 API 密钥等敏感数据
+      # 这些值在生产环境中应通过 Docker Secrets 或其他安全方式管理
+      # 示例环境变量，请根据你的 config_manager.py 来实际配置
+      DATABASE_URL: postgresql://user:password@db:5432/arbitrage_db # 数据库连接字符串
+      # OKX_API_KEY: your_okx_api_key
+      # OKX_SECRET: your_okx_secret
+      # OKX_PASSWORD: your_okx_password
+      # TELEGRAM_BOT_TOKEN: your_telegram_bot_token
+      # TELEGRAM_CHAT_ID: your_telegram_chat_id
+      LOG_LEVEL: INFO # 控制日志级别
+    restart: unless-stopped # 容器退出时自动重启，除非手动停止
+
+  db:
+    image: postgres:14-alpine # 使用轻量级的 PostgreSQL 14 版本
+    container_name: arbitrage_postgres_db
+    environment:
+      POSTGRES_DB: arbitrage_db # 数据库名称
+      POSTGRES_USER: user       # 数据库用户
+      POSTGRES_PASSWORD: password # 数据库密码
+    volumes:
+      - db_data:/var/lib/postgresql/data # 持久化数据库数据
+    ports:
+      - "5432:5432" # 暴露数据库端口，方便本地调试或连接
+    healthcheck: # 数据库健康检查，确保数据库准备就绪
+      test: ["CMD-SHELL", "pg_isready -U user -d arbitrage_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data: # 定义一个命名卷用于持久化 PostgreSQL 数据
